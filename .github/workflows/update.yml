@@ -1,10 +1,12 @@
-name: Synapt-AutoUpdate
+name: Synapt-AutoUpdate-Promo
 on:
   schedule:
-    - cron: '0 0 * * 1' # Cada Lunes
+    - cron: '0 0 * * 1' # CADA LUNES: Actualiza catálogo + Promo
+    - cron: '0 12 * * 2-7' # MAR A DOM (12:00 PM): Solo Promo diaria
   workflow_dispatch: # Botón manual
+
 jobs:
-  update:
+  run-task:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -15,4 +17,5 @@ jobs:
       - env:
           TMDB_KEY: ${{ secrets.TMDB_KEY }}
           JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: python update_movies.py
