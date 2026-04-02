@@ -1,0 +1,18 @@
+name: Synapt-AutoUpdate
+on:
+  schedule:
+    - cron: '0 0 * * 1' # Cada Lunes
+  workflow_dispatch: # Botón manual
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+      - run: pip install requests
+      - env:
+          TMDB_KEY: ${{ secrets.TMDB_KEY }}
+          JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
+        run: python update_movies.py
