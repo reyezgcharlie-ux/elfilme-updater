@@ -1,26 +1,30 @@
 name: Synapt-AutoUpdate-Promo-SEO
 on:
   schedule:
-    - cron: '0 0 * * 1' # Lunes medianoche
-    - cron: '0 12 * * 0,2,3,4,5,6' # Mar a Dom 12:00 PM
-  workflow_dispatch:
+    - cron: '0 0 * * 1' # LUNES: Actualización completa
+    - cron: '0 12 * * 0,2,3,4,5,6' # MAR A DOM: Solo Promo diaria
+  workflow_dispatch: # Tu botón manual en Actions
 
 permissions:
-  contents: write # IMPORTANTE: Permite al robot guardar el Sitemap
+  contents: write # Permiso CRITICO para que el bot guarde el Sitemap
 
 jobs:
   run-task:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v3
       
-      - uses: actions/setup-python@v4
+      - name: Configurar Python
+        uses: actions/setup-python@v4
         with:
           python-version: '3.9'
           
-      - run: pip install requests
+      - name: Instalar Dependencias
+        run: pip install requests
       
-      - env:
+      - name: Ejecutar Motor SYNAPT
+        env:
           TMDB_KEY: ${{ secrets.TMDB_KEY }}
           JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
@@ -30,6 +34,7 @@ jobs:
         run: |
           git config --global user.name 'SynaptBot'
           git config --global user.email 'bot@synapt.live'
-          git add sitemap.xml
+          # El comando || true evita que el bot falle si el archivo no ha cambiado
+          git add sitemap.xml || true
           git commit -m "SEO: Sitemap actualizado automáticamente" || exit 0
           git push
