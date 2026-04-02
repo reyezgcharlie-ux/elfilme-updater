@@ -1,9 +1,9 @@
 name: Synapt-AutoUpdate-Promo
 on:
   schedule:
-    - cron: '0 0 * * 1' # CADA LUNES: Actualiza catálogo + Promo
-    - cron: '0 12 * * 2-7' # MAR A DOM (12:00 PM): Solo Promo diaria
-  workflow_dispatch: # Botón manual
+    - cron: '0 0 * * 1' # LUNES: Actualiza y Promo
+    - cron: '0 12 * * 0,2,3,4,5,6' # MAR A DOM: Solo Promo
+  workflow_dispatch: # Botón manual para ti
 
 jobs:
   run-task:
