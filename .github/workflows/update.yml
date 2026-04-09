@@ -1,4 +1,4 @@
-name: Synapt-AutoUpdate-Promo-SEO
+Name: Synapt-AutoUpdate-Promo-SEO
 on:
   schedule:
     - cron: '0 0 * * 1' # LUNES: Actualización completa
@@ -23,18 +23,23 @@ jobs:
       - name: Instalar Dependencias
         run: pip install requests
       
-      - name: Ejecutar Motor SYNAPT
+      - name: Ejecutar Motor SYNAPT (Películas)
         env:
           TMDB_KEY: ${{ secrets.TMDB_KEY }}
           JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
           TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
         run: python update_movies.py
         
+      - name: Ejecutar Motor NOTICIAS (Synapt News)
+        env:
+          JSONBIN_KEY: ${{ secrets.JSONBIN_KEY }}
+          # Si el script de noticias usa otras llaves, añádelas aquí
+        run: python update_news.py
+
       - name: Guardar Cambios SEO
         run: |
           git config --global user.name 'SynaptBot'
           git config --global user.email 'bot@synapt.live'
-          # El comando || true evita que el bot falle si el archivo no ha cambiado
           git add sitemap.xml || true
-          git commit -m "SEO: Sitemap actualizado automáticamente" || exit 0
+          git commit -m "SEO: Sitemap y Noticias sincronizados" || exit 0
           git push
