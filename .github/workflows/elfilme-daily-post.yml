@@ -1,0 +1,32 @@
+name: 🎬 ElFilme Daily Post
+
+on:
+  schedule:
+    - cron: '40 15 * * *' # 7:40 AM PST = 15:40 UTC
+  workflow_dispatch:
+
+jobs:
+  post-elfilme:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Clonar repositorio
+        uses: actions/checkout@v4
+
+      - name: 🐍 Configurar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Instalar dependencias
+        run: pip install requests
+
+      - name: 🎬 Ejecutar ElFilme Daily
+        env:
+          TMDB_API_KEY: ${{ secrets.TMDB_API_KEY }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          NOTION_TOKEN: ${{ secrets.NOTION_TOKEN }}
+          NOTION_DB_ID: ${{ secrets.NOTION_DB_ID }}
+        run: python scripts/elfilme_daily.py
